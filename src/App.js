@@ -1,24 +1,44 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
+import TodoList from './TodoList';
+import TodoAdd from './TodoAdd';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  const TODO_KEY = 'todo.key'
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    let storedTodos = JSON.parse(localStorage.getItem(TODO_KEY))
+    if (storedTodos) {
+      console.log(storedTodos)
+      setTodos(storedTodos)
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem(TODO_KEY, JSON.stringify(todos))
+  }, [todos])
+
+  const Add = (todo) => {
+    setTodos([...todos, todo])
+  }
+
+  const Clear = () => {
+    let remaining = todos.filter(x => !x.completed)
+    setTodos(remaining)
+  }
+
+  const Toggle = (todo) => {
+    let newTodos = [...todos]
+    let newTodo = newTodos.find(x => x.id === todo.id)
+    newTodo.completed = !newTodo.completed
+    setTodos(newTodos)
+  }
+
+  return (<>
+    <TodoAdd onAdd={Add} onClear={Clear}></TodoAdd>
+    <TodoList todos={todos} onToggle={Toggle}></TodoList>
+  </>
   );
 }
 
