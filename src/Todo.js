@@ -1,13 +1,15 @@
 import React from 'react'
 
-export default function Todo({ todo, onToggle }) {
-    const Toggle = () => onToggle(todo)
+export default function Todo({ todo, toggleTodo }) {
+    function handleTodoClick() {
+        toggleTodo(todo.id)
+    }
 
     return (
         <div>
             <label>
-                <input type="checkbox" checked={todo.complete} onChange={Toggle} />
-                {todo.title}
+                <input type="checkbox" checked={todo.complete} onChange={handleTodoClick} />
+                {todo.name}
             </label>
         </div>
     )
